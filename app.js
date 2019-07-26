@@ -40,8 +40,8 @@ function loadModel(modelURL){
 	scene.add(axesHelper);
 	
 	//LIGHTS
-	var light = new THREE.PointLight( 0xffffff, 1, 100 );
-	light.position.set( 40, 50, 50 );
+	var light = new THREE.PointLight( 0x1FE0FF, 0.8, 80 );
+	light.position.set( 0, 70, 0 );
 	scene.add( light );
 	var light = new THREE.AmbientLight( 0x4E6172, 2 ); // soft white light
 	scene.add( light );
