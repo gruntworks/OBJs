@@ -1,4 +1,4 @@
-var camera, renderer, scene, gui, guiData
+let camera, renderer, scene, gui, guiData
 
 init();
 animate();
@@ -6,7 +6,7 @@ animate();
 
 function init(){
 	
-	var container = document.getElementById("container")
+	const container = document.getElementById("container")
 	camera = new THREE.PerspectiveCamera( 60, container.offsetWidth/container.offsetHeight, 0.1, 1000 );
 	camera.position.set(0, 2, 2);
 	
@@ -14,7 +14,7 @@ function init(){
 	renderer.setSize( container.offsetWidth, container.offsetHeight );
 	container.appendChild( renderer.domElement );
 	
-	var controls = new THREE.OrbitControls(camera, renderer.domElement);
+	const controls = new THREE.OrbitControls(camera, renderer.domElement);
 	controls.screenSpacePanning = true;
 	
 	window.addEventListener('resize', onWindowResize, false);
@@ -38,16 +38,20 @@ function loadModel(modelURL){
 	scene.add(axesHelper);
 	
 	//LIGHTS
-	var light = new THREE.PointLight( 0x1FE0FF, 0.8, 80 );
-	light.position.set( 0, 70, 0 );
+	let light = new THREE.PointLight( 0x1FE0FF, 2, 80 );
+
+	light.position.set( 30, 70, 0 );
 	scene.add( light );
-	var light = new THREE.AmbientLight( 0x4E6172, 2 ); // soft white light
-	scene.add( light );
+	let ambiLight = new THREE.AmbientLight( 0x404040, 3 ); // soft white light
+	scene.add(light);
+	scene.add(ambiLight);
 
 	// //LOAD MANAGER FOR LOADER
-	let manager = new THREE.LoadingManager();
+	const manager = new THREE.LoadingManager();
 	const load = document.getElementById("loading-screen");
+	const error = document.getElementById("error");
 	manager.onStart = function(){
+		error.style.display = "none";
 		load.classList.remove('fade-out')
 		load.style.display = "block";
 		
@@ -58,6 +62,11 @@ function loadModel(modelURL){
 		setTimeout(() =>{
 			load.style.display = "none";
 		}, 700);
+	}
+
+	manager.onError = function(){
+		error.style.display = "block";
+
 	}
 
 	//LOAD MODEL
@@ -106,11 +115,6 @@ function onWindowResize(){
 function animate(){
 	requestAnimationFrame( animate );
 	render();
-
-	// cube.rotation.x += guiControls.rotationX;
-	// cube.rotation.y += guiControls.rotationY;
-	// cube.rotation.z += guiControls.rotationZ;
-
 };
 
 function createGui(){
@@ -123,13 +127,13 @@ function createGui(){
 		"Knight":'models/Knight.obj',
 		"Armor Glove":'models/ArmorHand.obj',
 		"Frodo's sword":'models/Stinger.obj',
+		"Error":'models/Error.obj',
 
 	}).name('Model').onChange(update);
 	
 	gui.add(guiData, 'wireframe').onChange(update);
 
 	function update(){
-
 		loadModel(guiData.currentURL);
 	}
 	
@@ -137,7 +141,6 @@ function createGui(){
 }
 
 function render(){
-
 	renderer.render( scene, camera );
 }
 
