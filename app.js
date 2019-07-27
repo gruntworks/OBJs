@@ -7,10 +7,10 @@ animate();
 function init(){
 	
 	var container = document.getElementById("container")
-	camera = new THREE.PerspectiveCamera( 60, container.offsetWidth/container.offsetHeight, 1, 1000 );
+	camera = new THREE.PerspectiveCamera( 60, container.offsetWidth/container.offsetHeight, 0.1, 1000 );
 	camera.position.set(0, 2, 2);
 	
-	renderer = new THREE.WebGLRenderer();
+	renderer = new THREE.WebGLRenderer({antialias:true});
 	renderer.setSize( container.offsetWidth, container.offsetHeight );
 	container.appendChild( renderer.domElement );
 	
@@ -18,7 +18,6 @@ function init(){
 	controls.screenSpacePanning = true;
 	
 	window.addEventListener('resize', onWindowResize, false);
-
 	
 	guiData = {
 		currentURL:'models/Mjolnir.obj',
@@ -32,8 +31,7 @@ function init(){
 function loadModel(modelURL){
 	
 	scene = new THREE.Scene();
-	scene.background = new THREE.Color( 0x4E6172 );
-	
+	scene.background = new THREE.Color( 0x1a2224 );
 	let grid = new THREE.GridHelper(10, 10);
 	let axesHelper = new THREE.AxesHelper(3, 4);
 	scene.add(grid);
@@ -46,8 +44,24 @@ function loadModel(modelURL){
 	var light = new THREE.AmbientLight( 0x4E6172, 2 ); // soft white light
 	scene.add( light );
 
-	//Load Model
-	var loader = new THREE.OBJLoader();
+	// //LOAD MANAGER FOR LOADER
+	let manager = new THREE.LoadingManager();
+	const load = document.getElementById("loading-screen");
+	manager.onStart = function(){
+		load.classList.remove('fade-out')
+		load.style.display = "block";
+		
+	}
+	
+	manager.onLoad = function(){
+		load.classList.add( 'fade-out' );
+		setTimeout(() =>{
+			load.style.display = "none";
+		}, 700);
+	}
+
+	//LOAD MODEL
+	let loader = new THREE.OBJLoader(manager);
 	loader.load(modelURL, function ( object ) {
 
 		let material = new THREE.MeshLambertMaterial( { color: 0xffffff, wireframe:guiData.wireframe} );
@@ -67,8 +81,8 @@ function loadModel(modelURL){
 	},
 	// called when loading is in progresses
 	function ( xhr ) {
-
-		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+		let loadPercentage = xhr.loaded / xhr.total * 100;
+		console.log( loadPercentage + '% loaded' );
 
 	},
 	// called when loading has errors
@@ -78,11 +92,6 @@ function loadModel(modelURL){
 
 	})
 	
-	
-	// var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-	// var material = new THREE.MeshLambertMaterial( { color: 0xffffff} );
-	// var cube = new THREE.Mesh( geometry, material );
-	// scene.add( cube );
 }
 
 
@@ -120,6 +129,7 @@ function createGui(){
 	gui.add(guiData, 'wireframe').onChange(update);
 
 	function update(){
+
 		loadModel(guiData.currentURL);
 	}
 	
@@ -130,3 +140,4 @@ function render(){
 
 	renderer.render( scene, camera );
 }
+
