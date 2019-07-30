@@ -26,6 +26,7 @@ function init(){
 	
 	loadModel(guiData.currentURL)
 	createGui();
+
 }
 
 function loadModel(modelURL){
