@@ -23,6 +23,7 @@ function init(){
 		currentURL:'models/Mjolnir.obj',
 		wireframe: false
 	};
+	console.log("INIT");
 	
 	loadModel(guiData.currentURL)
 	createGui();
@@ -72,18 +73,25 @@ function loadModel(modelURL){
 	//LOAD MODEL
 	let loader = new THREE.OBJLoader(manager);
 	loader.load(modelURL, function ( object ) {
+		// object.traverse( function ( node ) {
 
-		let material = new THREE.MeshLambertMaterial( { color: 0xffffff, wireframe:guiData.wireframe} );
-		object.traverse( function ( node ) {
-
-			if ( node.isMesh ){
+		// 	if ( node.isMesh ){
 				
-				node.material = material;
-				if (material.wireframe) node.material.wireframe = true;
-			} 
+		// 		node.material = material;
+		// 		if (material.wireframe) node.material.wireframe = true;
+		// 	} 
 			
 		
-		  } );
+		//   } );
+		let material = new THREE.MeshLambertMaterial( { color: 0xffffff, wireframe:guiData.wireframe} );
+
+		object.traverse( function ( child ) {
+
+			if ( child instanceof THREE.Mesh ) {
+	
+				child.material = material;
+	
+			}});
 		scene.add( object );
 		console.log(object);
 
@@ -99,7 +107,8 @@ function loadModel(modelURL){
 
 		console.log( 'An error happened' );
 
-	})
+	});
+	console.log("LOAD MODEL UPDATE");
 	
 }
 
@@ -131,13 +140,28 @@ function createGui(){
 
 	}).name('Model').onChange(update);
 	
-	gui.add(guiData, 'wireframe').onChange(update);
+	gui.add(guiData, 'wireframe').onChange(updateWireframe);
 
 	function update(){
 		loadModel(guiData.currentURL);
 	}
 	
 	
+}
+
+function updateWireframe(){
+	let material = new THREE.MeshLambertMaterial( {wireframe:guiData.wireframe} );
+	scene.traverse( function ( node ) {
+		
+		if ( node.isMesh ){
+			
+			node.material = material;
+			if (material.wireframe) node.material.wireframe = true;
+		} 
+		
+	
+	  } );
+	  console.log("WIREFRAME UPDATE");
 }
 
 function render(){
