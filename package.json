@@ -1,0 +1,23 @@
+{
+  "name": "3d_model_viewer",
+  "version": "1.0.0",
+  "description": "Threejs model viewer",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcobanov/3d_model_viewer.git"
+  },
+  "author": "ShaderCode",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mcobanov/3d_model_viewer/issues"
+  },
+  "homepage": "https://github.com/mcobanov/3d_model_viewer#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
