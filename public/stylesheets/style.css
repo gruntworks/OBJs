@@ -132,4 +132,14 @@ canvas {
 /* dat GUI css override */
 .dg .c select {
   font-family: 'Raleway', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 50px;
+}
+input, div.slider, div.slider-fg, input.checkbox{
+  border-radius: 50px;
+}
+input[type="checkbox"]{
+  position: relative;
+  display: block;
+  width: 17px;
+  height: 17px;
 }
