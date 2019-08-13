@@ -43,6 +43,5 @@ app.use("/", router);
 
 app.listen(
   process.env.port || port,
-  // console.log(`Model viewer running on port ${port}!`)
   console.log(`Model viewer running on http://localhost:${port}/`)
 );
