@@ -1,4 +1,4 @@
-# 3d_model_viewer
+# OBJs
 Simple Threejs model viewer for viewing obj files
 
 ## Setup
